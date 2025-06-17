@@ -38,7 +38,7 @@ export function Header() {
   }, [])
 
   return (
-    <header className="sticky top-0 z-50 w-full border-b border-purple-500/30 bg-[#a855f7] bg-opacity-80 backdrop-blur shadow-[0_0_30px_#a855f7] supports-[backdrop-filter]:bg-[#a855f7]/60">
+<header className="sticky top-0 z-50 w-full border-b border-purple-500/40 bg-black/30 backdrop-blur-md backdrop-saturate-200 shadow-[0_0_20px_rgba(168,85,247,10.5)]">
 
       <div className="container mx-auto px-4">
         <div className="flex h-16 items-center justify-between">

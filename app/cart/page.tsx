@@ -21,9 +21,8 @@ export default function CartPage() {
   const saveCart = (items: any[]) => {
     localStorage.setItem("cart", JSON.stringify(items))
     setCartItems(items)
-    window.dispatchEvent(new Event("cartUpdated")) // 🔥 Notifies the Header
+    window.dispatchEvent(new Event("cartUpdated"))
   }
-
 
   const updateQuantity = (id: number, newQuantity: number) => {
     if (newQuantity === 0) {
@@ -87,7 +86,11 @@ export default function CartPage() {
                   >
                     <div className="min-w-[100px]">
                       <Image
-                        src={item.image || "/placeholder.svg"}
+                        src={
+                          item.media?.[0]?.type === "image" || item.media?.[0]?.type === "gif"
+                            ? item.media[0].src
+                            : "/placeholder.svg"
+                        }
                         alt={item.name}
                         width={100}
                         height={100}

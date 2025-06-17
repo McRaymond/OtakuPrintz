@@ -1,28 +1,46 @@
 "use client"
 
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
+import {
+  Card,
+  CardContent,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
-import { Star, ShoppingCart } from "lucide-react"
+import { Star, ShoppingCart, ChevronLeft, ChevronRight } from "lucide-react"
 import Image from "next/image"
+import { useState } from "react"
 
 interface Product {
   id: number
   name: string
   price: number
-  image: string
   rating: number
   reviews: number
   category?: string
   badge?: string
+  media: { type: "image" | "gif" | "video"; src: string }[]
 }
 
 export function ProductCard({ product }: { product: Product }) {
+  const [currentIndex, setCurrentIndex] = useState(0)
+  const media = product.media || []
+
+  const currentMedia = media[currentIndex]
+
+  const nextMedia = () =>
+    setCurrentIndex((prev) => (prev + 1) % media.length)
+  const prevMedia = () =>
+    setCurrentIndex((prev) => (prev - 1 + media.length) % media.length)
+
   const addToCart = () => {
     if (typeof window === "undefined") return
 
     const existingCart = JSON.parse(localStorage.getItem("cart") || "[]")
-    const index = existingCart.findIndex((item: Product & { quantity: number }) => item.id === product.id)
+    const index = existingCart.findIndex(
+      (item: Product & { quantity: number }) => item.id === product.id
+    )
 
     if (index !== -1) {
       existingCart[index].quantity += 1
@@ -39,14 +57,45 @@ export function ProductCard({ product }: { product: Product }) {
       className="group bg-gray-900 border-purple-500/20 hover:border-purple-400/50 transition-all duration-300 hover:shadow-lg hover:shadow-purple-500/20"
     >
       <CardHeader className="p-0">
-        {/* square image container */}
         <div className="relative aspect-square overflow-hidden rounded-t-lg bg-black">
-          <Image
-            src={product.image || "/placeholder.svg"}
-            alt={product.name}
-            fill
-            className="object-contain transition-transform duration-300 group-hover:scale-105"
-          />
+          {/* Media Viewer */}
+          {currentMedia?.type === "image" || currentMedia?.type === "gif" ? (
+            <Image
+              src={currentMedia.src}
+              alt={product.name}
+              fill
+              className="object-contain transition-transform duration-300 group-hover:scale-105"
+            />
+          ) : currentMedia?.type === "video" ? (
+            <video
+              src={currentMedia.src}
+              autoPlay
+              muted
+              loop
+              playsInline
+              className="w-full h-full object-cover"
+            />
+          ) : null}
+
+          {/* Arrows if multiple media */}
+          {media.length > 1 && (
+            <>
+              <button
+                onClick={prevMedia}
+                className="absolute left-2 top-1/2 -translate-y-1/2 bg-black/40 hover:bg-black/60 text-white p-1 rounded-full"
+              >
+                <ChevronLeft size={20} />
+              </button>
+              <button
+                onClick={nextMedia}
+                className="absolute right-2 top-1/2 -translate-y-1/2 bg-black/40 hover:bg-black/60 text-white p-1 rounded-full"
+              >
+                <ChevronRight size={20} />
+              </button>
+            </>
+          )}
+
+          {/* Badge */}
           {product.badge && (
             <Badge className="absolute top-4 left-4 bg-purple-600 shadow-[0_0_10px_rgba(168,85,247,0.5)]">
               {product.badge}
@@ -74,7 +123,7 @@ export function ProductCard({ product }: { product: Product }) {
 
         <div className="flex justify-between items-center">
           <span className="text-2xl font-bold text-purple-600">
-            ${product.price}
+            ${product.price.toFixed(2)}
           </span>
           <Button
             size="sm"
