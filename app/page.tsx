@@ -6,6 +6,7 @@ import { CallToAction } from "@/components/CallToAction"
 export default function HomePage() {
   return (
     <>
+    
       <HeroSection />
       <FeaturedProducts /> 
       <CallToAction />
