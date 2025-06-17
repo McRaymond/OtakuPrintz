@@ -38,18 +38,24 @@ export function Header() {
   }, [])
 
   return (
-    <header className="sticky top-0 z-50 w-full border-b border-purple-500/20 bg-black/95 backdrop-blur supports-[backdrop-filter]:bg-black/60">
+    <header className="sticky top-0 z-50 w-full border-b border-purple-500/30 bg-[#a855f7] bg-opacity-80 backdrop-blur shadow-[0_0_30px_#a855f7] supports-[backdrop-filter]:bg-[#a855f7]/60">
+
       <div className="container mx-auto px-4">
         <div className="flex h-16 items-center justify-between">
           {/* Logo */}
           <Link href="/" className="flex items-center space-x-2">
-            <div className="bg-gradient-to-r from-purple-600 to-pink-600 text-white p-2 rounded-lg shadow-[0_0_15px_rgba(168,85,247,0.5)]">
-              <span className="font-bold text-lg">AF3D</span>
+            <div >
+              <img
+                src="/img/logo.png"
+                alt="OtakuPrintz Logo"
+                className="w-8 h-8 object-contain"
+              />
             </div>
             <span className="font-bold text-xl hidden sm:block text-white">
-              Anime Figures 3D
+              OtakuPrintz
             </span>
           </Link>
+
 
           {/* Desktop Nav */}
           <nav className="hidden md:flex items-center space-x-6">
