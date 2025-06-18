@@ -43,7 +43,7 @@ export default function AboutPage() {
         </div>
         <div className="container mx-auto px-4 relative z-10">
           <div className="max-w-4xl mx-auto text-center">
-            <h1 className="text-4xl md:text-6xl font-bold mb-6 bg-gradient-to-r from-purple-400 via-pink-400 to-purple-400 bg-clip-text text-transparent drop-shadow-[0_0_30px_rgba(168,85,247,0.5)]">
+            <h1 className="text-4xl md:text-6xl font-bold mb-6 bg-gradient-to-r  from-purple-900 via-purple-500 to-blue-900 bg-clip-text text-transparent drop-shadow-[0_0_30px_rgba(168,85,247,0.5)]">
               About SenpaiForge
             </h1>
             <p className="text-xl md:text-2xl text-white mb-8">
