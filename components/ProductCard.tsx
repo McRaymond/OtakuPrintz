@@ -8,7 +8,12 @@ import {
 } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
-import { Star, ShoppingCart, ChevronLeft, ChevronRight } from "lucide-react"
+import {
+  Star,
+  ShoppingCart,
+  ChevronLeft,
+  ChevronRight,
+} from "lucide-react"
 import Image from "next/image"
 import { useState } from "react"
 
@@ -19,54 +24,43 @@ interface Product {
   rating: number
   reviews: number
   category?: string
-  badge?: string
+  badges?: string[]
   media: { type: "image" | "gif" | "video"; src: string }[]
 }
 
 export function ProductCard({ product }: { product: Product }) {
   const [currentIndex, setCurrentIndex] = useState(0)
-  const media = product.media || []
-
+  const media = product.media ?? []
   const currentMedia = media[currentIndex]
 
   const nextMedia = () =>
-    setCurrentIndex((prev) => (prev + 1) % media.length)
+    setCurrentIndex((i) => (i + 1) % media.length)
   const prevMedia = () =>
-    setCurrentIndex((prev) => (prev - 1 + media.length) % media.length)
+    setCurrentIndex((i) => (i - 1 + media.length) % media.length)
 
   const addToCart = () => {
     if (typeof window === "undefined") return
-
-    const existingCart = JSON.parse(localStorage.getItem("cart") || "[]")
-    const index = existingCart.findIndex(
-      (item: Product & { quantity: number }) => item.id === product.id
-    )
-
-    if (index !== -1) {
-      existingCart[index].quantity += 1
-    } else {
-      existingCart.push({ ...product, quantity: 1 })
-    }
-
-    localStorage.setItem("cart", JSON.stringify(existingCart))
+    const cart = JSON.parse(localStorage.getItem("cart") || "[]")
+    const idx = cart.findIndex((it: any) => it.id === product.id)
+    if (idx !== -1) cart[idx].quantity += 1
+    else cart.push({ ...product, quantity: 1 })
+    localStorage.setItem("cart", JSON.stringify(cart))
+    window.dispatchEvent(new Event("cartUpdated"))
   }
 
   return (
-    <Card
-      key={product.id}
-      className="group bg-gray-900 border-purple-500/20 hover:border-purple-400/50 transition-all duration-300 hover:shadow-lg hover:shadow-purple-500/20"
-    >
+    <Card className="group bg-gray-900 border-purple-500/20 hover:border-purple-400/50 transition-all duration-300 hover:shadow-lg hover:shadow-purple-500/20">
+      {/* ───────────── media ───────────── */}
       <CardHeader className="p-0">
         <div className="relative aspect-square overflow-hidden rounded-t-lg bg-black">
-          {/* Media Viewer */}
-          {currentMedia?.type === "image" || currentMedia?.type === "gif" ? (
+          {currentMedia?.type !== "video" ? (
             <Image
-              src={currentMedia.src}
+              src={currentMedia?.src || "/placeholder.svg"}
               alt={product.name}
               fill
               className="object-contain transition-transform duration-300 group-hover:scale-105"
             />
-          ) : currentMedia?.type === "video" ? (
+          ) : (
             <video
               src={currentMedia.src}
               autoPlay
@@ -75,9 +69,8 @@ export function ProductCard({ product }: { product: Product }) {
               playsInline
               className="w-full h-full object-cover"
             />
-          ) : null}
+          )}
 
-          {/* Arrows if multiple media */}
           {media.length > 1 && (
             <>
               <button
@@ -95,28 +88,35 @@ export function ProductCard({ product }: { product: Product }) {
             </>
           )}
 
-          {/* Badge */}
-          {product.badge && (
-            <Badge className="absolute top-4 left-4 bg-purple-600 shadow-[0_0_10px_rgba(168,85,247,0.5)]">
-              {product.badge}
-            </Badge>
-          )}
+          {/* ───────────── rounded + bigger badges ───────────── */}
+          {product.badges
+            ?.filter((b) => b.toLowerCase() !== "featured")
+            .map((b, i) => (
+              <Badge
+                key={i}
+                className="absolute left-4 bg-purple-600 text-white text-base px-4 py-2 rounded-full shadow-[0_0_10px_rgba(168,85,247,0.5)]"
+                style={{ top: `${1 + i * 2.6}rem` }}
+              >
+                {b}
+              </Badge>
+            ))}
         </div>
       </CardHeader>
 
+      {/* ───────────── details ───────────── */}
       <CardContent className="p-6 text-white">
         <CardTitle className="mb-2">{product.name}</CardTitle>
 
         {product.category && (
-          <p className="text-sm text-white mb-3">{product.category}</p>
+          <p className="text-sm mb-3">{product.category}</p>
         )}
 
         <div className="flex items-center gap-2 mb-3">
-          <div className="flex items-center">
-            <Star className="w-4 h-4 fill-yellow-400 text-yellow-400" />
-            <span className="text-sm font-medium ml-1">{product.rating}</span>
-          </div>
-          <span className="text-sm text-white">
+          <Star className="w-4 h-4 fill-yellow-400 text-yellow-400" />
+          <span className="text-sm font-medium">
+            {product.rating}
+          </span>
+          <span className="text-sm">
             ({product.reviews} reviews)
           </span>
         </div>
@@ -138,3 +138,5 @@ export function ProductCard({ product }: { product: Product }) {
     </Card>
   )
 }
+
+/* Ricky fact: Ricky Martin’s debut solo album sold over 500,000 copies in 3 days. 🔥 */

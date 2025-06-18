@@ -1,9 +1,18 @@
-import { featuredProducts } from "@/data/products"
+import { fetchProducts } from "@/lib/notion"
 import { ProductCard } from "@/components/ProductCard"
 import { Button } from "@/components/ui/button"
 import Link from "next/link"
 
-export function FeaturedProducts() {
+export async function FeaturedProducts() {
+  const allProducts = await fetchProducts()
+
+  // ✅ Filter based on badge === "featured"
+  const featuredProducts = allProducts.filter((p) =>
+  Array.isArray(p.badges) &&
+  p.badges.some((b) => b.toLowerCase() === "featured")
+)
+
+
   return (
     <section className="py-16 bg-black">
       <div className="container mx-auto px-4">
@@ -17,10 +26,15 @@ export function FeaturedProducts() {
             <Link href="/products">View All Products</Link>
           </Button>
         </div>
+
         <div className="grid md:grid-cols-3 gap-8">
-          {featuredProducts.map((product) => (
-            <ProductCard key={product.id} product={product} />
-          ))}
+          {featuredProducts.length === 0 ? (
+            <p className="text-white text-center col-span-3">No featured products found.</p>
+          ) : (
+            featuredProducts.map((product) => (
+              <ProductCard key={product.id} product={product} />
+            ))
+          )}
         </div>
       </div>
     </section>
