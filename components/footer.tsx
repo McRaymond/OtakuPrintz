@@ -8,12 +8,12 @@ export function Footer() {
         <div className="grid md:grid-cols-4 gap-8">
           {/* Company Info */}
           <div>
-            <div className="flex items-center space-x-2 mb-4">
-              <div className="bg-gradient-to-r from-purple-600 to-pink-600 text-white p-2 rounded-lg shadow-[0_0_15px_rgba(168,85,247,0.5)]">
-                <span className="font-bold">AF3D</span>
-              </div>
-              <span className="font-bold">Anime Figures 3D</span>
+                      <div className="flex my-4">
+            <div className="bg-gradient-to-r from-purple-900 to-blue-900 text-white px-5 py-1 rounded-lg shadow-[0_0_12px_rgba(168,85,247,0.5)] text-center">
+              <span className="font-bold block leading-tight text-sm">SenpaiForge</span>
+              <span className="font-bold block leading-tight text-sm">センパイフォージ</span>
             </div>
+          </div>
             <p className="text-gray-400 mb-4">
               Premium 3D printed anime figures with incredible detail. Bringing your favorite characters to life.
             </p>

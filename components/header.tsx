@@ -44,16 +44,17 @@ export function Header() {
         <div className="flex h-16 items-center justify-between">
           {/* Logo */}
           <Link href="/" className="flex items-center space-x-2">
-            <div >
-              <img
-                src="/img/logo.png"
-                alt="OtakuPrintz Logo"
-                className="w-8 h-8 object-contain"
-              />
+            
+          <div className="flex justify-center items-center my-2">
+            <div className="bg-gradient-to-r from-purple-900 to-blue-900 text-white px-3 py-1 rounded-lg shadow-[0_0_12px_rgba(168,85,247,0.5)] text-center">
+              <span className="font-bold block leading-tight text-sm">SenpaiForge</span>
+              <span className="font-bold block leading-tight text-sm">センパイフォージ</span>
             </div>
-            <span className="font-bold text-xl hidden sm:block text-white">
-              OtakuPrintz
-            </span>
+          </div>
+
+
+
+
           </Link>
 
 

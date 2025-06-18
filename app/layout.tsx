@@ -9,7 +9,7 @@ import { CartProvider } from "@/context/CartContext" // ← make sure this path 
 const inter = Inter({ subsets: ["latin"] })
 
 export const metadata: Metadata = {
-  title: "OtakuPrintz",
+  title: "SenpaiForge",
   description:
     "Premium 3D printed anime figures with incredible detail. Ready-made collections and custom orders available.",
 }
