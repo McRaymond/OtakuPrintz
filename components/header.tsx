@@ -9,7 +9,6 @@ import { Badge } from "@/components/ui/badge"
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet"
 import { Search, ShoppingCart, Menu, User, Heart } from "lucide-react"
 
-/** fallback if CartContext isn’t mounted yet */
 const safeGetCartCount = () => {
   try {
     if (typeof window === "undefined") return 0
@@ -25,12 +24,11 @@ const safeGetCartCount = () => {
 export function Header() {
   const [cartCount, setCartCount] = useState<number>(safeGetCartCount)
 
-  /* listen once the app is hydrated */
   useEffect(() => {
     const update = () => setCartCount(safeGetCartCount())
-    update()                               // first paint
+    update()
     window.addEventListener("cartUpdated", update)
-    window.addEventListener("storage", update) // another tab
+    window.addEventListener("storage", update)
     return () => {
       window.removeEventListener("cartUpdated", update)
       window.removeEventListener("storage", update)
@@ -38,25 +36,18 @@ export function Header() {
   }, [])
 
   return (
-<header className="sticky top-0 z-50 w-full border-b border-purple-500/40 bg-black/30 backdrop-blur-md backdrop-saturate-200 shadow-[0_0_20px_rgba(168,85,247,10.5)]">
-
+    <header className="sticky top-0 z-50 w-full border-b border-purple-500/40 bg-black/30 backdrop-blur-md backdrop-saturate-200 shadow-[0_0_20px_rgba(168,85,247,10.5)]">
       <div className="container mx-auto px-4">
         <div className="flex h-16 items-center justify-between">
           {/* Logo */}
           <Link href="/" className="flex items-center space-x-2">
-            
-          <div className="flex justify-center items-center my-2">
-            <div className="bg-gradient-to-r from-purple-900 to-blue-900 text-white px-3 py-1 rounded-lg shadow-[0_0_12px_rgba(168,85,247,0.5)] text-center">
-              <span className="font-bold block leading-tight text-sm">SenpaiForge</span>
-              <span className="font-bold block leading-tight text-sm">センパイフォージ</span>
+            <div className="flex justify-center items-center my-2">
+              <div className="bg-gradient-to-r from-purple-900 to-blue-900 text-white px-3 py-1 rounded-lg shadow-[0_0_12px_rgba(168,85,247,0.5)] text-center">
+                <span className="font-bold block leading-tight text-sm">SenpaiForge</span>
+                <span className="font-bold block leading-tight text-sm">センパイフォージ</span>
+              </div>
             </div>
-          </div>
-
-
-
-
           </Link>
-
 
           {/* Desktop Nav */}
           <nav className="hidden md:flex items-center space-x-6">
@@ -89,8 +80,10 @@ export function Header() {
 
           {/* Icons */}
           <div className="flex items-center space-x-4">
-            <Button variant="ghost" size="sm" className="hidden sm:flex">
-              <Heart className="h-5 w-5" />
+            <Button variant="ghost" size="sm" className="hidden sm:flex" asChild>
+              <Link href="/favorites">
+                <Heart className="h-5 w-5 hover:text-purple-500 transition-colors" />
+              </Link>
             </Button>
             <Button variant="ghost" size="sm" className="hidden sm:flex">
               <User className="h-5 w-5" />
@@ -116,11 +109,10 @@ export function Header() {
                 </Button>
               </SheetTrigger>
               <SheetContent side="right" className="w-80">
-                {/* same links as desktop */}
                 <div className="flex flex-col space-y-4 mt-8">
-                  {["/products","/custom-order","/about","/contact"].map((href) => (
+                  {["/products", "/custom-order", "/about", "/contact"].map((href) => (
                     <Link key={href} href={href} className="text-lg font-medium">
-                      {href.replace("/","").replace("-"," ").replace(/^\w/, c=>c.toUpperCase())}
+                      {href.replace("/", "").replace("-", " ").replace(/^\w/, (c) => c.toUpperCase())}
                     </Link>
                   ))}
                 </div>

@@ -13,9 +13,11 @@ import {
   ShoppingCart,
   ChevronLeft,
   ChevronRight,
+  Heart,
 } from "lucide-react"
 import Image from "next/image"
-import { useState } from "react"
+import { useEffect, useState } from "react"
+import Link from "next/link"
 
 interface Product {
   id: number
@@ -30,13 +32,26 @@ interface Product {
 
 export function ProductCard({ product }: { product: Product }) {
   const [currentIndex, setCurrentIndex] = useState(0)
+  const [isFavorite, setIsFavorite] = useState(false)
   const media = product.media ?? []
   const currentMedia = media[currentIndex]
 
-  const nextMedia = () =>
-    setCurrentIndex((i) => (i + 1) % media.length)
-  const prevMedia = () =>
-    setCurrentIndex((i) => (i - 1 + media.length) % media.length)
+  useEffect(() => {
+    const favorites = JSON.parse(localStorage.getItem("favorites") || "[]")
+    setIsFavorite(favorites.some((item: Product) => item.id === product.id))
+  }, [product.id])
+
+  const toggleFavorite = () => {
+    const stored = JSON.parse(localStorage.getItem("favorites") || "[]")
+    const updated = isFavorite
+      ? stored.filter((p: Product) => p.id !== product.id)
+      : [...stored, product]
+    localStorage.setItem("favorites", JSON.stringify(updated))
+    setIsFavorite(!isFavorite)
+  }
+
+  const nextMedia = () => setCurrentIndex((i) => (i + 1) % media.length)
+  const prevMedia = () => setCurrentIndex((i) => (i - 1 + media.length) % media.length)
 
   const addToCart = () => {
     if (typeof window === "undefined") return
@@ -88,7 +103,16 @@ export function ProductCard({ product }: { product: Product }) {
             </>
           )}
 
-          {/* ───────────── rounded + bigger badges ───────────── */}
+          {/* ───────────── heart icon ───────────── */}
+          <Heart
+            onClick={toggleFavorite}
+            className={`absolute top-3 right-3 w-6 h-6 cursor-pointer transition-colors z-10 ${
+              isFavorite ? "text-purple-500" : "text-white"
+            }`}
+            fill={isFavorite ? "#a855f7" : "none"}
+          />
+
+          {/* ───────────── badges ───────────── */}
           {product.badges
             ?.filter((b) => b.toLowerCase() !== "featured")
             .map((b, i) => (
@@ -113,12 +137,8 @@ export function ProductCard({ product }: { product: Product }) {
 
         <div className="flex items-center gap-2 mb-3">
           <Star className="w-4 h-4 fill-yellow-400 text-yellow-400" />
-          <span className="text-sm font-medium">
-            {product.rating}
-          </span>
-          <span className="text-sm">
-            ({product.reviews} reviews)
-          </span>
+          <span className="text-sm font-medium">{product.rating}</span>
+          <span className="text-sm">({product.reviews} reviews)</span>
         </div>
 
         <div className="flex justify-between items-center">
