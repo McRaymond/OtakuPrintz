@@ -14,11 +14,7 @@ export const metadata: Metadata = {
     "Premium 3D printed anime figures with incredible detail. Ready-made collections and custom orders available.",
 }
 
-export default function RootLayout({
-  children,
-}: {
-  children: React.ReactNode
-}) {
+export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="en" className="bg-black">
       <body className={`${inter.className} bg-black text-white`}>
@@ -31,3 +27,4 @@ export default function RootLayout({
     </html>
   )
 }
+
